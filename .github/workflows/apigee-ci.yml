@@ -31,6 +31,13 @@ jobs:
       with:
         java-version: 1.8
 
+    - name: Cache the Maven packages to speed up build
+      uses: actions/cache@v1
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2   
+
     - name: mvn-package
       run: mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
 
@@ -40,6 +47,7 @@ jobs:
     - name: mvn-deploy-config
       run:  |
         sed -i "s/target_apigee_env/$MAVEN_PROFILE/g" ./EdgeConfig/edge.json
+        cat /EdgeConfig/edge.json
         mvn install -P$MAVEN_PROFILE -Dapigee.org=$APIGEE_ORG -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
 
     - name: mvn-deploy-proxy
