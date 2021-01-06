@@ -42,7 +42,11 @@ jobs:
       run: mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
 
     - name: mvn-config
-      run: mvn apigee-enterprise:configure -P$MAVEN_PROFILE -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
+      run: |
+        mvn apigee-enterprise:configure -P$MAVEN_PROFILE -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
+        ls 
+        echo "--------------------"
+        ls ./target
  
     - name: mvn-deploy-config
       run:  |
