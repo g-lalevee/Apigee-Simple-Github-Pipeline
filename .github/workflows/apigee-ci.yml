@@ -1,0 +1,29 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Apigee CI with Maven
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: mvn-config
+      with:
+        MAVEN_PROFILE: test
+        GIT_BRANCH: main
+        AUTHOR_EMAIL: clalevee@gmail.com
+        APIGEE_DEPLOYMENT_SUFFIX: ""
+        APIGEE_CREDS_USR: ${{ secrets.APIGEE_CREDS_USR }}
+        APIGEE_CREDS_PSW: ${{ secrets.APIGEE_CREDS_PSW }}
+      run:  mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
+
