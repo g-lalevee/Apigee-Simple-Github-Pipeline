@@ -47,7 +47,7 @@ jobs:
     - name: mvn-deploy-config
       run:  |
         sed -i "s/target_apigee_env/$MAVEN_PROFILE/g" ./EdgeConfig/edge.json
-        cat /EdgeConfig/edge.json
+        cat ./EdgeConfig/edge.json
         mvn install -P$MAVEN_PROFILE -Dapigee.org=$APIGEE_ORG -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
 
     - name: mvn-deploy-proxy
