@@ -48,13 +48,14 @@ jobs:
 
     - name: apigeelint
       run: ./node_modules/apigeelint/cli.js -s ./apiproxy -f html.js -e PO013 > ./apigeelint-out.html
-
+      
 
     - name: Archive Apigeeelint results
       uses: actions/upload-artifact@v2
       with:
         name: apigeelint-report
         path: ./apigeelint-out.html
+        retention-days: 5
 
 
     - name: Set up JDK 1.8
