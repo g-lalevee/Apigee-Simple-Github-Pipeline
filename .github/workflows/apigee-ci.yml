@@ -19,12 +19,37 @@ env:
   APIGEE_CREDS_PSW: ${{ secrets.APIGEE_CREDS_PSW }}
 
 jobs:
-  build:
+  Apigee-Deploy:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
+
+    # Create Dependency Cache 
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        # npm cache files are stored in `~/.npm` 
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+
+    # Install dependency
+    - name: Install Dependencies
+      run: npm install --silent --no-fund
+
+
+    - name: apigeelint
+      run: ./node_modules/apigeelint/cli.js -s ./apiproxy -f html.js -e PO013 
+      # > ./apigeelint-out.html
+
 
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
