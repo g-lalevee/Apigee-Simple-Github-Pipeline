@@ -48,13 +48,34 @@ jobs:
 
     - name: apigeelint
       run: ./node_modules/apigeelint/cli.js -s ./apiproxy -f html.js -e PO013 > ./apigeelint-out.html
-      
 
     - name: Archive Apigeeelint results
       uses: actions/upload-artifact@v2
       with:
         name: apigeelint-report
         path: ./apigeelint-out.html
+        retention-days: 5
+
+
+    - name: eslint
+      run : ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > ./eslint-out.html
+
+    - name: Archive esLint results
+      uses: actions/upload-artifact@v2
+      with:
+        name: eslint-report
+        path: ./eslint-out.html
+        retention-days: 5
+
+
+    - name: mocha
+      run: ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha ./test/unit
+ 
+    - name: Archive esLint results
+      uses: actions/upload-artifact@v2
+      with:
+        name: mocha-report
+        path:  ./coverage/index.html
         retention-days: 5
 
 
