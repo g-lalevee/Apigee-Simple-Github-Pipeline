@@ -116,7 +116,7 @@ jobs:
 # Run Integration testing (Apickli) + upload artifact
     - name: apickli
       run: |
-        echo ::set-env name=TEST_HOST::${{ APIGEE_ORG }}-${{ MAVEN_PROFILE }}.apigee.net
+        TEST_HOST=$APIGEE_ORG-$MAVEN_PROFILE.apigee.net
         sed -i "s/organization_hostname/$TEST_HOST/g" ./test/integration/features/support/init.js
         node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:./report.json
         node ./test/integration/index.js
