@@ -29,8 +29,8 @@ jobs:
     - uses: actions/checkout@v2
 
 
-# bla bla
-    - name: Set Variable for Main branch
+# Set Variables depending on branch
+    - name: Set Variable for [Main] branch
       if: github.ref == 'refs/heads/main'
       run: |
         APIGEE_DEPLOYMENT_SUFFIX=""
@@ -38,6 +38,24 @@ jobs:
         APIGEE_ORG="$DEFAULT_APIGEE_ORG"
         TEST_HOST="$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
         echo $TEST_HOST
+
+    - name: Set Variable for [Prod] branch
+      if: github.ref == 'refs/heads/prod'
+      run: |
+        APIGEE_DEPLOYMENT_SUFFIX=""
+        MAVEN_PROFILE="prod"
+        APIGEE_ORG="$DEFAULT_APIGEE_ORG"
+        TEST_HOST="$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
+        echo $TEST_HOST
+ 
+    - name: Set Variable for branch
+      if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
+      run: |
+        APIGEE_DEPLOYMENT_SUFFIX=${GITHUB.REF// /-} 
+        MAVEN_PROFILE="test"
+        APIGEE_ORG="$DEFAULT_APIGEE_ORG"
+        TEST_HOST="$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
+        echo $TEST_HOST     
 
 
 # Create Dependency Cache 
