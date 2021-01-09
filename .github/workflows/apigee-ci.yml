@@ -30,16 +30,14 @@ jobs:
 
 
 # bla bla
-    - name: conditional command
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    - name: Set Variable for Main branch
+      if: github.ref == 'refs/heads/main'
       run: |
         APIGEE_DEPLOYMENT_SUFFIX=""
         MAVEN_PROFILE="test"
         APIGEE_ORG="$DEFAULT_APIGEE_ORG"
         TEST_HOST="$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
         echo $TEST_HOST
-
-
 
 
 # Create Dependency Cache 
