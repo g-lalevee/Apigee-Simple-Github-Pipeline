@@ -31,6 +31,7 @@ jobs:
 
 # bla bla
     - name: conditional command
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         if [ $GITHUB_REF == "main"]; then
           APIGEE_DEPLOYMENT_SUFFIX=""
