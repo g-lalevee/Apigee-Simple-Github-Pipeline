@@ -36,26 +36,22 @@ jobs:
       run: |
         echo "::set-env name=MAVEN_PROFILE::test"
         echo "::set-env name=APIGEE_ORG::$(echo $DEFAULT_APIGEE_ORG)"
-        echo "::set-env name=TEST_HOST::$(echo $APIGEE_ORG-$MAVEN_PROFILE).apigee.net"
-        echo ${{ env.TEST_HOST }}
+        echo "::set-env name=TEST_HOST::$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)"
 
     - name: Set Variable for [Prod] branch
       if: github.ref == 'refs/heads/prod'
       run: |
-        APIGEE_DEPLOYMENT_SUFFIX=""
-        MAVEN_PROFILE="prod"
-        APIGEE_ORG="$DEFAULT_APIGEE_ORG"
-        TEST_HOST="$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
-        echo $TEST_HOST
+        echo "::set-env name=MAVEN_PROFILE::prod"
+        echo "::set-env name=APIGEE_ORG::$(echo $DEFAULT_APIGEE_ORG)"
+        echo "::set-env name=TEST_HOST::$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)"
  
     - name: Set Variable for branch
       if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
       run: |
-        APIGEE_DEPLOYMENT_SUFFIX=${GITHUB.REF// /-} 
-        MAVEN_PROFILE="test"
-        APIGEE_ORG="$DEFAULT_APIGEE_ORG"
-        TEST_HOST="$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
-        echo $TEST_HOST     
+        echo "::set-env name=APIGEE_DEPLOYMENT_SUFFIX::$(echo GITHUB.REF// /-)"
+        echo "::set-env name=MAVEN_PROFILE::test"
+        echo "::set-env name=APIGEE_ORG::$(echo $DEFAULT_APIGEE_ORG)"
+        echo "::set-env name=TEST_HOST::$(echo $APIGEE_ORG-$MAVEN_PROFILE).apigee.net" 
 
 
 # Create Dependency Cache 
