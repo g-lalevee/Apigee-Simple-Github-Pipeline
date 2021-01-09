@@ -11,10 +11,10 @@ on:
   
 
 env:
-  MAVEN_PROFILE: test
-  GIT_BRANCH: main
+  MAVEN_PROFILE: ''
+  GIT_BRANCH: ''
   AUTHOR_EMAIL: clalevee@gmail.com
-  APIGEE_ORG: emea-demo7
+  APIGEE_ORG: ''
   DEFAULT_APIGEE_ORG: emea-demo7
   APIGEE_DEPLOYMENT_SUFFIX: ''
   APIGEE_CREDS_USR: ${{ secrets.APIGEE_CREDS_USR }}
