@@ -32,14 +32,14 @@ jobs:
 # bla bla
     - name: conditional command
       run: |
-        if $GITHUB_REF == "main"; then
+        if [ $GITHUB_REF == "main"]; then
           APIGEE_DEPLOYMENT_SUFFIX=""
           MAVEN_PROFILE="test"
           APIGEE_ORG="$DEFAULT_APIGEE_ORG"
 
         # Prod branch for Apigee prod environment
         else
-          if [ $$GITHUB_REF == "prod" ]; then
+          if [ $GITHUB_REF == "prod" ]; then
             APIGEE_DEPLOYMENT_SUFFIX=""
             MAVEN_PROFILE="prod"
             APIGEE_ORG="$DEFAULT_APIGEE_ORG"
