@@ -33,11 +33,11 @@ jobs:
     - name: Set Variable for [Main] branch
       if: github.ref == 'refs/heads/main'
       run: |
-        APIGEE_DEPLOYMENT_SUFFIX=""
-        MAVEN_PROFILE="test"
-        APIGEE_ORG="$DEFAULT_APIGEE_ORG"
-        TEST_HOST="$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
-        echo $TEST_HOST
+        ${{ $APIGEE_DEPLOYMENT_SUFFIX }} = ""
+        ${{ MAVEN_PROFILE }} = "test"
+        ${{ APIGEE_ORG }} ="$DEFAULT_APIGEE_ORG"
+        ${{ TEST_HOST }} = "$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
+        echo ${{ $TEST_HOST }}
 
     - name: Set Variable for [Prod] branch
       if: github.ref == 'refs/heads/prod'
