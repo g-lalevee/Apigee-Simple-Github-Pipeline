@@ -34,8 +34,8 @@ jobs:
     - name: Set Variable for [Main] branch
       if: github.ref == 'refs/heads/main'
       run: |
-        echo "::set-env name=APIGEE_DEPLOYMENT_SUFFIX::''"
-        echo "::set-env name=MAVEN_PROFILE::'test'"
+        echo "::set-env name=APIGEE_DEPLOYMENT_SUFFIX::"
+        echo "::set-env name=MAVEN_PROFILE::test"
         echo "::set-env name=APIGEE_ORG::DEFAULT_APIGEE_ORG"
         echo "::set-env name=TEST_HOST::APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
         echo ${{ env.TEST_HOST }}
