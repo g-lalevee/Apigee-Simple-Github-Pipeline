@@ -33,10 +33,11 @@ jobs:
     - name: Set Variable for [Main] branch
       if: github.ref == 'refs/heads/main'
       run: |
-        ${{ env.APIGEE_DEPLOYMENT_SUFFIX }} = ""
-        ${{ env.MAVEN_PROFILE }} = "test"
-        ${{ env.APIGEE_ORG }} ="$DEFAULT_APIGEE_ORG"
-        ${{ env.TEST_HOST }} = "$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
+        echo "::set-env name=flag::true"
+        echo "::set-env name=APIGEE_DEPLOYMENT_SUFFIX::''"
+        echo "::set-env name=MAVEN_PROFILE::'test'"
+        echo "::set-env name=APIGEE_ORG::DEFAULT_APIGEE_ORG"
+        echo "::set-env name=TEST_HOST::APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
         echo ${{ env.TEST_HOST }}
 
     - name: Set Variable for [Prod] branch
