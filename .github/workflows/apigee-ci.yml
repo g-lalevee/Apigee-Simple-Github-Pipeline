@@ -9,24 +9,55 @@ on:
   pull_request:
     branches: [ main ]
   
+
 env:
   MAVEN_PROFILE: test
   GIT_BRANCH: main
   AUTHOR_EMAIL: clalevee@gmail.com
   APIGEE_ORG: emea-demo7
+  DEFAULT_APIGEE_ORG: emea-demo7
   APIGEE_DEPLOYMENT_SUFFIX: ''
   APIGEE_CREDS_USR: ${{ secrets.APIGEE_CREDS_USR }}
   APIGEE_CREDS_PSW: ${{ secrets.APIGEE_CREDS_PSW }}
 
+
 jobs:
   Apigee-Deploy:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
 
-    # Create Dependency Cache 
+
+# bla bla
+    - name: conditional command
+      run: |
+        if $GITHUB_REF == "main"; then
+          APIGEE_DEPLOYMENT_SUFFIX=""
+          MAVEN_PROFILE="test"
+          APIGEE_ORG="$DEFAULT_APIGEE_ORG"
+
+        # Prod branch for Apigee prod environment
+        else
+          if [ $$GITHUB_REF == "prod" ]; then
+            APIGEE_DEPLOYMENT_SUFFIX=""
+            MAVEN_PROFILE="prod"
+            APIGEE_ORG="$DEFAULT_APIGEE_ORG"
+
+          # All other branches are deployed as separate proxies with suffix in the test environment
+          else
+            APIGEE_DEPLOYMENT_SUFFIX=${GITHUB_REF// /-} 
+            MAVEN_PROFILE="test"
+            APIGEE_ORG="$DEFAULT_APIGEE_ORG"
+          fi
+        fi
+        TEST_HOST="$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
+        cho $TEST_HOST
+
+
+
+
+# Create Dependency Cache 
     - name: Cache node modules
       uses: actions/cache@v2
       env:
@@ -41,7 +72,7 @@ jobs:
           ${{ runner.os }}-
 
 
-# Install dependency
+# Install dependencies
     - name: Install Dependencies
       run: npm install --silent --no-fund
 
