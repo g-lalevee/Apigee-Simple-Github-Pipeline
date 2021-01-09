@@ -33,27 +33,11 @@ jobs:
     - name: conditional command
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
-        if [ $GITHUB_REF == "main"]; then
-          APIGEE_DEPLOYMENT_SUFFIX=""
-          MAVEN_PROFILE="test"
-          APIGEE_ORG="$DEFAULT_APIGEE_ORG"
-
-        # Prod branch for Apigee prod environment
-        else
-          if [ $GITHUB_REF == "prod" ]; then
-            APIGEE_DEPLOYMENT_SUFFIX=""
-            MAVEN_PROFILE="prod"
-            APIGEE_ORG="$DEFAULT_APIGEE_ORG"
-
-          # All other branches are deployed as separate proxies with suffix in the test environment
-          else
-            APIGEE_DEPLOYMENT_SUFFIX=${GITHUB_REF// /-} 
-            MAVEN_PROFILE="test"
-            APIGEE_ORG="$DEFAULT_APIGEE_ORG"
-          fi
-        fi
+        APIGEE_DEPLOYMENT_SUFFIX=""
+        MAVEN_PROFILE="test"
+        APIGEE_ORG="$DEFAULT_APIGEE_ORG"
         TEST_HOST="$APIGEE_ORG-$MAVEN_PROFILE.apigee.net"
-        cho $TEST_HOST
+        echo $TEST_HOST
 
 
 
