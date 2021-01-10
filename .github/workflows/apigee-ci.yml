@@ -40,7 +40,7 @@ jobs:
       run: |
         echo $GITHUB_BASE_REF
         echo $GITHUB_ACTOR
-        echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo GITHUB.REF | sed 's/.*\///'" >> $GITHUB_ENV
+        echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo $GITHUB_REF | sed 's/.*\///')" >> $GITHUB_ENV
         echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
         echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
         echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
