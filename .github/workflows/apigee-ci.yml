@@ -38,9 +38,6 @@ jobs:
         echo "::set-env name=MAVEN_PROFILE::test"
         echo "::set-env name=APIGEE_ORG::$(echo $DEFAULT_APIGEE_ORG)"
         echo "::set-env name=TEST_HOST::$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)"
-        echo $GITHUB_ACTOR
-        echo $AUTHOR_EMAIL
-        echo --------------
 
     - name: Set Variable for [Prod] branch
       if: github.ref == 'refs/heads/prod'
@@ -136,7 +133,11 @@ jobs:
 
 # Deploy Apigee proxy
     - name: mvn-package
-      run: mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
+      run: |
+        echo $GITHUB_ACTOR
+        echo $AUTHOR_EMAIL
+        echo --------------
+        mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
            
     - name: mvn-config
       run: mvn apigee-enterprise:configure -P$MAVEN_PROFILE -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
