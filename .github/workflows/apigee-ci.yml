@@ -38,7 +38,9 @@ jobs:
         echo "::set-env name=MAVEN_PROFILE::test"
         echo "::set-env name=APIGEE_ORG::$(echo $DEFAULT_APIGEE_ORG)"
         echo "::set-env name=TEST_HOST::$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)"
+        echo $GITHUB_ACTOR
         echo $AUTHOR_EMAIL
+        echo --------------
 
     - name: Set Variable for [Prod] branch
       if: github.ref == 'refs/heads/prod'
