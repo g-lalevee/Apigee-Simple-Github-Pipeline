@@ -40,6 +40,7 @@ jobs:
       run: |
         echo $GITHUB_BASE_REF
         echo $GITHUB_ACTOR
+        echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo GITHUB.REF | sed 's/.*\///" >> $GITHUB_ENV
         echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
         echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
         echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
@@ -56,7 +57,7 @@ jobs:
     - name: Set Variables for branch not [Main], not [Prod]
       if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
       run: |
-        echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo GITHUB.REF// /-)" >> $GITHUB_ENV
+        echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo GITHUB.REF ) | sed 's/.*\///" >> $GITHUB_ENV
         echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
         echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
         echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
@@ -144,6 +145,7 @@ jobs:
       run: |
         echo $GITHUB_ACTOR
         echo $AUTHOR_EMAIL
+        echo $APIGEE_DEPLOYMENT_SUFFIX
         echo --------------
         mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
            
