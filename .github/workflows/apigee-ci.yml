@@ -13,7 +13,7 @@ on:
 env:
   MAVEN_PROFILE: ''
   GIT_BRANCH: ''
-  AUTHOR_EMAIL: clalevee@gmail.com
+  AUTHOR_EMAIL: ${{ env.GITHUB_ACTOR }}
   APIGEE_ORG: ''
   DEFAULT_APIGEE_ORG: emea-demo7
   APIGEE_DEPLOYMENT_SUFFIX: ''
@@ -35,7 +35,7 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         echo $GITHUB_ACTOR
-        echo $GIT_AUTHOR_EMAIL
+        echo $AUTHOR_EMAIL
         echo "::set-env name=MAVEN_PROFILE::test"
         echo "::set-env name=APIGEE_ORG::$(echo $DEFAULT_APIGEE_ORG)"
         echo "::set-env name=TEST_HOST::$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)"
