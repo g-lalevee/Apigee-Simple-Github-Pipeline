@@ -22,8 +22,6 @@ env:
   AUTHOR_EMAIL: ''
   APIGEE_ORG: ''
   APIGEE_DEPLOYMENT_SUFFIX: ''
-  # why ? https://github.blog/changelog/2020-10-01-github-actions-deprecating-set-env-and-add-path-commands/
-  # ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
 
 jobs:
@@ -38,9 +36,6 @@ jobs:
     - name: Set Variables for [Main] branch
       if: github.ref == 'refs/heads/main'
       run: |
-        echo $GITHUB_BASE_REF
-        echo $GITHUB_ACTOR
-        echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo $GITHUB_REF | sed 's/.*\///')" >> $GITHUB_ENV
         echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
         echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
         echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
@@ -57,7 +52,7 @@ jobs:
     - name: Set Variables for branch not [Main], not [Prod]
       if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
       run: |
-        echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo GITHUB.REF ) | sed 's/.*\///" >> $GITHUB_ENV
+        echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo $GITHUB_REF | sed 's/.*\///')" >> $GITHUB_ENV
         echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
         echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
         echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
@@ -119,6 +114,7 @@ jobs:
         path:  ./coverage/index.html
         retention-days: 5
 
+
 # Setup Maven & Maven Cache
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
@@ -142,12 +138,7 @@ jobs:
 
 # Deploy Apigee proxy
     - name: mvn-package
-      run: |
-        echo $GITHUB_ACTOR
-        echo $AUTHOR_EMAIL
-        echo $APIGEE_DEPLOYMENT_SUFFIX
-        echo --------------
-        mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
+      run: mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
            
     - name: mvn-config
       run: mvn apigee-enterprise:configure -P$MAVEN_PROFILE -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
