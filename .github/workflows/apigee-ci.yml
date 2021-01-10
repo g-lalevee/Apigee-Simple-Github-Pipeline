@@ -38,12 +38,8 @@ jobs:
     - name: Set Variables for [Main] branch
       if: github.ref == 'refs/heads/main'
       run: |
-        #echo "::set-env name=AUTHOR_EMAIL::$(echo $GITHUB_ACTOR)"
-        #echo "::set-env name=MAVEN_PROFILE::test"
-        #echo "::set-env name=APIGEE_ORG::$(echo $DEFAULT_APIGEE_ORG)"
-        #echo "::set-env name=TEST_HOST::$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)"
         echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-        echo "MAVEN_PROFILE=test)" >> $GITHUB_ENV
+        echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
         echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
         echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
 
