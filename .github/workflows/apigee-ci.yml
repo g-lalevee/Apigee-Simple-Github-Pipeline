@@ -3,13 +3,8 @@
 
 name: Apigee CI with Maven
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: push
   
-
 env:
   # target Apigee organization (can be also be dynamically defined in [Set Variables *] steps
   DEFAULT_APIGEE_ORG: emea-demo7
