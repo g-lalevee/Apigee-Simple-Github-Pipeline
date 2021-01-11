@@ -24,7 +24,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-
   # Set Variables depending on branch
       - name: Set Variables for [Main] branch
         if: github.ref == 'refs/heads/main'
