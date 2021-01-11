@@ -1,17 +1,15 @@
-# This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: Apigee CI with Maven
 
 on: push
   
 env:
-  # target Apigee organization (can be also be dynamically defined in [Set Variables *] steps
+  # Default Target Apigee Organization (can be also be dynamically defined in [Set Variables *] steps)
   DEFAULT_APIGEE_ORG: emea-demo7
   # Retrieve Apigee UserID and password from repository settings (secrets)
   APIGEE_CREDS_USR: ${{ secrets.APIGEE_CREDS_USR }}
   APIGEE_CREDS_PSW: ${{ secrets.APIGEE_CREDS_PSW }}
-  # These variable will be dynamically defined in [Set Variables *] steps
+  # These variables will be dynamically defined in [Set Variables *] steps
   MAVEN_PROFILE: ''
   GIT_BRANCH: ''
   AUTHOR_EMAIL: ''
@@ -54,7 +52,7 @@ jobs:
         echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
 
 
-# Create Dependency Cache 
+# Create Dependencies (npm) Cache 
     - name: Cache node modules
       uses: actions/cache@v2
       env:
@@ -69,12 +67,12 @@ jobs:
           ${{ runner.os }}-
 
 
-# Install dependencies
+# Install dependencies (npm)
     - name: Install Dependencies
       run: npm install --silent --no-fund
 
 
-# Run apigeeLint test + upload artifact
+# Run apigeeLint test + upload artifact (apigeelint-out.html)
     - name: apigeelint
       run: ./node_modules/apigeelint/cli.js -s ./apiproxy -f html.js -e PO013 > ./apigeelint-out.html
 
@@ -86,7 +84,7 @@ jobs:
         retention-days: 5
 
 
-# Run eslint test + upload artifact
+# Run eslint test + upload artifact (eslint-out.html)
     - name: eslint
       run : ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > ./eslint-out.html
 
@@ -98,7 +96,7 @@ jobs:
         retention-days: 5
 
 
-# Run JS Mocha test + upload artifact
+# Run JS Mocha test + upload artifact (coverage/index.html)
     - name: mocha
       run: ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha ./test/unit
  
@@ -124,14 +122,14 @@ jobs:
         restore-keys: ${{ runner.os }}-m2   
 
 
-# Deploy Apigeee Config
+# Deploy Apigeee Config (Apigee [Config] Maven plugin)
     - name: mvn-deploy-config
       run:  |
         sed -i "s/target_apigee_env/$MAVEN_PROFILE/g" EdgeConfig/edge.json
         mvn install -P$MAVEN_PROFILE -Dapigee.org=$APIGEE_ORG -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
 
 
-# Deploy Apigee proxy
+# Package & Deploy Apigee proxy (Apigee [Deploy] Maven plugin)
     - name: mvn-package
       run: mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
            
@@ -142,7 +140,7 @@ jobs:
       run: mvn apigee-enterprise:deploy -P$MAVEN_PROFILE -Dapigee.org=$APIGEE_ORG -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
 
 
-# Run Integration testing (Apickli) + upload artifact
+# Run Integration testing (Apickli) + upload artifact (cucumber_report.html)
     - name: apickli
       run: |
         TEST_HOST=$APIGEE_ORG-$MAVEN_PROFILE.apigee.net
