@@ -22,135 +22,135 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
 
-# Set Variables depending on branch
-    - name: Set Variables for [Main] branch
-      if: github.ref == 'refs/heads/main'
-      run: |
-        echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-        echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
-        echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-        echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
+  # Set Variables depending on branch
+      - name: Set Variables for [Main] branch
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
+          echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
+          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
+          echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
 
-    - name: Set Variables for [Prod] branch
-      if: github.ref == 'refs/heads/prod'
-      run: |
-        echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-        echo "MAVEN_PROFILE=prod" >> $GITHUB_ENV
-        echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-        echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
- 
-    - name: Set Variables for branch not [Main], not [Prod]
-      if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
-      run: |
-        echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo $GITHUB_REF | sed 's/.*\///')" >> $GITHUB_ENV
-        echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-        echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
-        echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-        echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
-
-
-# Create Dependencies (npm) Cache 
-    - name: Cache node modules
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-node-modules
-      with:
-        # npm cache files are stored in `~/.npm` 
-        path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+      - name: Set Variables for [Prod] branch
+        if: github.ref == 'refs/heads/prod'
+        run: |
+          echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
+          echo "MAVEN_PROFILE=prod" >> $GITHUB_ENV
+          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
+          echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
+  
+      - name: Set Variables for branch not [Main], not [Prod]
+        if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
+        run: |
+          echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo $GITHUB_REF | sed 's/.*\///')" >> $GITHUB_ENV
+          echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
+          echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
+          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
+          echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
 
 
-# Install dependencies (npm)
-    - name: Install Dependencies
-      run: npm install --silent --no-fund
+  # Create Dependencies (npm) Cache 
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` 
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
 
-# Run apigeeLint test + upload artifact (apigeelint-out.html)
-    - name: apigeelint
-      run: ./node_modules/apigeelint/cli.js -s ./apiproxy -f html.js -e PO013 > ./apigeelint-out.html
-
-    - name: Archive Apigeeelint results
-      uses: actions/upload-artifact@v2
-      with:
-        name: apigeelint-report
-        path: ./apigeelint-out.html
-        retention-days: 5
+  # Install dependencies (npm)
+      - name: Install Dependencies
+        run: npm install --silent --no-fund
 
 
-# Run eslint test + upload artifact (eslint-out.html)
-    - name: eslint
-      run : ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > ./eslint-out.html
+  # Run apigeeLint test + upload artifact (apigeelint-out.html)
+      - name: apigeelint
+        run: ./node_modules/apigeelint/cli.js -s ./apiproxy -f html.js -e PO013 > ./apigeelint-out.html
 
-    - name: Archive esLint results
-      uses: actions/upload-artifact@v2
-      with:
-        name: eslint-report
-        path: ./eslint-out.html
-        retention-days: 5
-
-
-# Run JS Mocha test + upload artifact (coverage/index.html)
-    - name: mocha
-      run: ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha ./test/unit
- 
-    - name: Archive Mocha results
-      uses: actions/upload-artifact@v2
-      with:
-        name: mocha-report
-        path:  ./coverage/index.html
-        retention-days: 5
+      - name: Archive Apigeeelint results
+        uses: actions/upload-artifact@v2
+        with:
+          name: apigeelint-report
+          path: ./apigeelint-out.html
+          retention-days: 5
 
 
-# Setup Maven & Maven Cache
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
+  # Run eslint test + upload artifact (eslint-out.html)
+      - name: eslint
+        run : ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > ./eslint-out.html
 
-    - name: Cache the Maven packages to speed up build
-      uses: actions/cache@v1
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2   
+      - name: Archive esLint results
+        uses: actions/upload-artifact@v2
+        with:
+          name: eslint-report
+          path: ./eslint-out.html
+          retention-days: 5
 
 
-# Deploy Apigeee Config (Apigee [Config] Maven plugin)
-    - name: mvn-deploy-config
-      run:  |
-        sed -i "s/target_apigee_env/$MAVEN_PROFILE/g" EdgeConfig/edge.json
-        mvn install -P$MAVEN_PROFILE -Dapigee.org=$APIGEE_ORG -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
+  # Run JS Mocha test + upload artifact (coverage/index.html)
+      - name: mocha
+        run: ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha ./test/unit
+  
+      - name: Archive Mocha results
+        uses: actions/upload-artifact@v2
+        with:
+          name: mocha-report
+          path:  ./coverage/index.html
+          retention-days: 5
 
 
-# Package & Deploy Apigee proxy (Apigee [Deploy] Maven plugin)
-    - name: mvn-package
-      run: mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
-           
-    - name: mvn-config
-      run: mvn apigee-enterprise:configure -P$MAVEN_PROFILE -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
- 
-    - name: mvn-deploy-proxy
-      run: mvn apigee-enterprise:deploy -P$MAVEN_PROFILE -Dapigee.org=$APIGEE_ORG -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
+  # Setup Maven & Maven Cache
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Cache the Maven packages to speed up build
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2   
 
 
-# Run Integration testing (Apickli) + upload artifact (cucumber_report.html)
-    - name: apickli
-      run: |
-        TEST_HOST=$APIGEE_ORG-$MAVEN_PROFILE.apigee.net
-        sed -i "s/organization_hostname/$TEST_HOST/g" ./test/integration/features/support/init.js
-        node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:./report.json
-        node ./test/integration/index.js
+  # Deploy Apigeee Config (Apigee [Config] Maven plugin)
+      - name: mvn-deploy-config
+        run:  |
+          sed -i "s/target_apigee_env/$MAVEN_PROFILE/g" EdgeConfig/edge.json
+          mvn install -P$MAVEN_PROFILE -Dapigee.org=$APIGEE_ORG -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
 
-    - name: Archive Apickli results
-      uses: actions/upload-artifact@v2
-      with:
-        name: apickli-report
-        path: ./cucumber_report.html
-        retention-days: 5
+
+  # Package & Deploy Apigee proxy (Apigee [Deploy] Maven plugin)
+      - name: mvn-package
+        run: mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
+            
+      - name: mvn-config
+        run: mvn apigee-enterprise:configure -P$MAVEN_PROFILE -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
+  
+      - name: mvn-deploy-proxy
+        run: mvn apigee-enterprise:deploy -P$MAVEN_PROFILE -Dapigee.org=$APIGEE_ORG -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
+
+
+  # Run Integration testing (Apickli) + upload artifact (cucumber_report.html)
+      - name: apickli
+        run: |
+          TEST_HOST=$APIGEE_ORG-$MAVEN_PROFILE.apigee.net
+          sed -i "s/organization_hostname/$TEST_HOST/g" ./test/integration/features/support/init.js
+          node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:./report.json
+          node ./test/integration/index.js
+
+      - name: Archive Apickli results
+        uses: actions/upload-artifact@v2
+        with:
+          name: apickli-report
+          path: ./cucumber_report.html
+          retention-days: 5
