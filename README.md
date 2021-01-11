@@ -2,8 +2,6 @@
 
 # Apigee-Simple-Github-Pipeline
 
-Under construction...
-
 **This is not an official Google product.**<BR>This implementation is not an official Google product, nor is it part of an official Google product. Support is available on a best-effort basis via GitHub.
 
 ***
@@ -11,7 +9,7 @@ Under construction...
 ## Goal
 
 Simple implementation for a CI/CD pipeline for Apigee using GitHub repository, 
-[CI/CD with GitHub](https://docs.GitHub.com/ee/ci/introduction/) and the [Apigee Deploy Maven Plugin](https://github.com/apigee/apigee-deploy-maven-plugin).
+[CI/CD with GitHub](https://docs.GitHub.com/ee/ci/introduction/) and the Apigee Maven Plugins.
 
 The CICD pipeline includes:
 
@@ -76,13 +74,13 @@ git push -u origin feature/cicd-pipeline
 
 ### GitHub Configuration 
 
-Add custom environment variables APIGEE_CREDS_USR and APIGEE_CREDS_PSW, to store your Apigee User ID and password:
+Add GitHub secrets APIGEE_CREDS_USR and APIGEE_CREDS_PSW, to store your Apigee User ID and password:
 - Go to your repository’s Settings > Secrets.
-- Click the **New Repository** button.<BR>Fill in the details:
+- Click the **New Repository Secret** button.<BR>Fill in the details:
   - Name: APIGEE_CREDS_USR
   - Value: your Apigee user ID 
   - Click the **Add secret** button
-- Click again the **New Repository** button.<BR>Fill in the details:
+- Click again the **New Repository Secret** button.<BR>Fill in the details:
   - Name: APIGEE_CREDS_PSW
   - Value: your Apigee user ID password
   - Click the **Add secret** button
@@ -90,7 +88,7 @@ Add custom environment variables APIGEE_CREDS_USR and APIGEE_CREDS_PSW, to store
 ## Run the pipeline
 
 Using your favorite IDE...
-1.  Update the **.github/worrkflows/apigee-ci.yml** file<BR>
+1.  Update the **.github/workflows/apigee-ci.yml** file<BR>
 In **"env"** section (workflow level), change **DEFAULT_APIGEE_ORG** value by your target Apigee organization.
 2.  Read carefully the **"Set Variables for [Main] branch"** step to check if the multibranch rules match your GitHub and Apigee environment naming and configuration.
 3. Save
@@ -98,18 +96,18 @@ In **"env"** section (workflow level), change **DEFAULT_APIGEE_ORG** value by yo
 
 Use the GitHub UI to monitor your pipeline execution:
 
-- Go to your GitHub  repository > Actions (tab). You can see your workflow running
+- Go to your GitHub repository > **Actions** (tab). You can see your workflow running.
 
-![GitHub CICD Pipeline](img/GitHubUI-1.png)
+![GitHub CICD Pipeline](img/GitHubUI-1.png)<BR>
 
-- Click on it to see execution detail.
+- Click on it to see execution detail. In list of jobs, click on **Apigee-Deploy**.
 
-![GitHub CICD Pipeline Animated](img/GitHubUI-2.png)
+![GitHub CICD Pipeline Animated](img/GitHubUI-2.png)<BR>
 
-- And the end of test stages you can download artifacts. Click on **Summary** link and scroll down to the **Artifacts** section.
+- And the end of execution, you can download artifacts. Click on **Summary** link and scroll down to the **Artifacts** section.
 
-![GitHub CICD Pipeline artifacts](img/GitHubUI-3.png)
+![GitHub CICD Pipeline artifacts](img/GitHubUI-3.png)<BR>
 
-- For example, the results of static code analysis for Apigee proxy using Apigeelint (download apigeelint-report.zip file, open html content with your browser)
+- For example, the results of static code analysis for Apigee proxy using Apigeelint (download apigeelint-report.zip file, open html content with your browser):
 
-![GitHub CICD Pipeline apickli](./img/GitHubUI-4.png)
+![GitHub CICD Pipeline apickli](./img/GitHubUI-4.png)<BR>
