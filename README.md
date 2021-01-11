@@ -98,16 +98,16 @@ Use the GitHub UI to monitor your pipeline execution:
 
 - Go to your GitHub repository > **Actions** (tab). You can see your workflow running.
 
-![GitHub CICD Pipeline](img/GitHubUI-1.png)<BR><BR>
+![GitHub CICD Pipeline](img/GitHubUI-1.png)<BR>&nbsp;<BR>
 
 - Click on it to see execution detail. In list of jobs, click on **Apigee-Deploy**.
 
-![GitHub CICD Pipeline Animated](img/GitHubUI-2.png)<BR><BR>
+![GitHub CICD Pipeline Animated](img/GitHubUI-2.png)<BR>&nbsp;<BR>
 
 - At the end of execution, you can download artifacts.<BR>Click on **Summary** link and scroll down to the **Artifacts** section.
 
-![GitHub CICD Pipeline artifacts](img/GitHubUI-3.png)<BR><BR>
+![GitHub CICD Pipeline artifacts](img/GitHubUI-3.png)<BR>&nbsp;<BR>
 
 - For example, download **apigeelint-report.zip** file and open html content with your browser. You can see the results of static code analysis for Apigee proxy with Apigeelint tool:
 
-![GitHub CICD Pipeline apickli](./img/GitHubUI-4.png)<BR><BR>
+![GitHub CICD Pipeline apickli](./img/GitHubUI-4.png)<BR>&nbsp;<BR>
