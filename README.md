@@ -56,7 +56,7 @@ The folder [./apiproxy](./apiproxy) includes a simple API proxy bundle, a simple
 Create a GitHub repository to hold your API Proxy. 
 
 To use the `Apigee-Simple-Github_CI-Pipeline`
-in a **GitHub** repository `github.com/my-user/my-api-proxy-repo` follow these
+in your GitHub repository like `github.com/my-user/my-api-proxy-repo`, follow these
 steps:
 
 ```bash
@@ -74,8 +74,8 @@ git push -u origin feature/cicd-pipeline
 
 ### GitHub Configuration 
 
-Add GitHub secrets APIGEE_CREDS_USR and APIGEE_CREDS_PSW, to store your Apigee User ID and password:
-- Go to your repository’s Settings > Secrets.
+Add GitHub secrets `APIGEE_CREDS_USR` and `APIGEE_CREDS_PSW`, to store your Apigee User ID and password:
+- Go to your repository’s **Settings** > **Secrets**.
 - Click the **New Repository Secret** button.<BR>Fill in the details:
   - Name: APIGEE_CREDS_USR
   - Value: your Apigee user ID 
@@ -88,8 +88,8 @@ Add GitHub secrets APIGEE_CREDS_USR and APIGEE_CREDS_PSW, to store your Apigee U
 ## Run the pipeline
 
 Using your favorite IDE...
-1.  Update the **.github/workflows/apigee-ci.yml** file<BR>
-In **"env"** section (workflow level), change **DEFAULT_APIGEE_ORG** value by your target Apigee organization.
+1.  Update the **.github/workflows/apigee-ci.yml** file.<BR>
+In **"env"** section (workflow level), change `DEFAULT_APIGEE_ORG` value by your target Apigee organization.
 2.  Read carefully the **"Set Variables for [Main] branch"** step to check if the multibranch rules match your GitHub and Apigee environment naming and configuration.
 3. Save
 4. Commit, Push.. et voila!
@@ -104,10 +104,10 @@ Use the GitHub UI to monitor your pipeline execution:
 
 ![GitHub CICD Pipeline Animated](img/GitHubUI-2.png)<BR>
 
-- And the end of execution, you can download artifacts. Click on **Summary** link and scroll down to the **Artifacts** section.
+- At the end of execution, you can download artifacts.<BR>Click on **Summary** link and scroll down to the **Artifacts** section.
 
 ![GitHub CICD Pipeline artifacts](img/GitHubUI-3.png)<BR>
 
-- For example, the results of static code analysis for Apigee proxy using Apigeelint (download apigeelint-report.zip file, open html content with your browser):
+- For example, download **apigeelint-report.zip** file and open html content with your browser. You can see the results of static code analysis for Apigee proxy with Apigeelint tool:
 
 ![GitHub CICD Pipeline apickli](./img/GitHubUI-4.png)<BR>
