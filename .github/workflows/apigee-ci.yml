@@ -157,18 +157,4 @@ jobs:
         run: mvn apigee-enterprise:deploy -Pgoogleapi -Denv=$APIGEE_ENV -Dsa=$GCP_SERVICE_ACCCOUNT -Dorg=$APIGEE_ORG -Ddeployment.suffix=$APIGEE_BUILD_DEPLOYMENT_SUFFIX 
 
 
-  # Run Integration testing (Apickli) + upload artifact (cucumber_report.html)
-      - name: apickli
-        run: |
-          sed -i "s/organization_hostname/$TEST_HOST/g" ./test/integration/features/support/init.js
-          node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:./report.json
-          node ./test/integration/index.js
-
-      - name: Archive Apickli results
-        uses: actions/upload-artifact@v2
-        with:
-          name: apickli-report
-          path: ./cucumber_report.html
-          retention-days: 5
-
 
