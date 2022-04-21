@@ -128,11 +128,47 @@ jobs:
           restore-keys: ${{ runner.os }}-m2   
 
   # Deploy Apigeee Config (Apigee [Config] Maven plugin)
-      - name: mvn-deploy-config
+      - name: mvn-deploy-config-edge
         if: env.API_VERSION == 'apigeeapi'
         run:  |
           sed -i "s/target_apigee_env/$APIGEE_ENV/g" ./EdgeConfig/edge.json
           mvn install -Papigeeapi -Dapigee.org=$APIGEE_ORG -Denv=$APIGEE_ENV -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
 
+     - name: mvn-deploy-config-xhybrid
+        if: env.API_VERSION == 'googleapi'
+        run:  |
+          sed -i "s/target_apigee_env/$APIGEE_ENV/g" ./EdgeConfig/edge.json
+          mvn install -Pgoogleapi -Dapigee.org=$APIGEE_ORG -Denv=$APIGEE_ENV -Dsa=$GCP_SERVICE_ACCCOUNT -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
+
+
+  # Package & Deploy Apigee proxy (Apigee [Deploy] Maven plugin)
+      - name: mvn-package
+        run: mvn process-resources -P$API_VERSION -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
+
+      - name: mvn-config
+        run: mvn apigee-enterprise:configure -P$API_VERSION -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV  -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
+
+      - name: mvn-deploy-proxy-edge
+        if: env.API_VERSION == 'apigeeapi'
+        run: mvn apigee-enterprise:deploy -Papigeeapi -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV -Dpassword=$APIGEE_CREDS_PSW -Dusername=$APIGEE_CREDS_USR -Ddeployment.suffix=$APIGEE_BUILD_DEPLOYMENT_SUFFIX 
+
+      - name: mvn-deploy-proxy-xhybrid
+        if: env.API_VERSION == 'googleapi'
+        run: mvn apigee-enterprise:deploy -Pgoogleapi -Denv=$APIGEE_ENV -Dsa=$GCP_SERVICE_ACCCOUNT -Dorg=$APIGEE_ORG -Ddeployment.suffix=$APIGEE_BUILD_DEPLOYMENT_SUFFIX 
+
+
+  # Run Integration testing (Apickli) + upload artifact (cucumber_report.html)
+      - name: apickli
+        run: |
+          sed -i "s/organization_hostname/$TEST_HOST/g" ./test/integration/features/support/init.js
+          node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:./report.json
+          node ./test/integration/index.js
+
+      - name: Archive Apickli results
+        uses: actions/upload-artifact@v2
+        with:
+          name: apickli-report
+          path: ./cucumber_report.html
+          retention-days: 5
 
 
