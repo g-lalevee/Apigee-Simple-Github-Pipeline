@@ -1,6 +1,8 @@
 
 name: Apigee CI with Maven
 
+on: push
+  
   
 jobs:
   Apigee-Deploy:
