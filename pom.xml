@@ -14,6 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
@@ -178,9 +179,7 @@ limitations under the License.
 					</plugin>            
 				</plugins>
 			</build>
-	
 		</profile>
-
 
 
 		<profile>
@@ -337,16 +336,17 @@ limitations under the License.
 					<replacements>
 						<replacement>
 							<token>org-env.apigee.net</token>
-							<value>${apigee.org}-${apigee.env}.apigee.net</value>
+							<value>${TEST_HOST}</value>
 						</replacement>
-						<replacement>
+<!-- 						<replacement>
 							<token>/airports-cicd/v1</token>
 							<value>/airports-cicd${deployment.suffix}/v1</value>
 						</replacement>
 						<replacement>
 							<token>@description</token>
 							<value>${deployment.description}</value>
-						</replacement>
+						</replacement> 
+-->
 					</replacements>
 				</configuration>
 			</plugin>
