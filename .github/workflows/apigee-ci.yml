@@ -4,10 +4,9 @@ name: Apigee CI with Maven
 on: push
   
 env:
-
-  API_VERSION: "googleapi" 
+  API_VERSION: googleapi 
   # or 
-  #API_VERSION: "apigeeapi"
+  #API_VERSION: apigeeapi
 
   # Default Target Apigee Organization et environment (can be also be dynamically defined in [Set Variables *] steps)
   DEFAULT_APIGEE_ORG: bap-emea-apigee-5
