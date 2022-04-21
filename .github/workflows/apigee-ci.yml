@@ -133,7 +133,9 @@ jobs:
       - name: Generate SA key file
         if: env.API_VERSION == 'googleapi'
         run: | 
+          echo $GCP_SERVICE_ACCOUNT 
           echo $GCP_SERVICE_ACCOUNT > sa.json
+          cat sa.json
  
 
   # Deploy Apigee Config (Apigee [Config] Maven plugin)
