@@ -83,7 +83,7 @@ jobs:
       - name: apigeelint
         run: ./node_modules/apigeelint/cli.js -s ./apiproxy -f html.js -e PO013 > ./apigeelint-out.html
 
-      - name: Archive Apigeeelint results
+      - name: Archive Apigeelint results
         uses: actions/upload-artifact@v2
         with:
           name: apigeelint-report
@@ -135,7 +135,7 @@ jobs:
         run: echo '$(GCP_SERVICE_ACCOUNT)' > sa.json
  
 
-  # Deploy Apigeee Config (Apigee [Config] Maven plugin)
+  # Deploy Apigee Config (Apigee [Config] Maven plugin)
       - name: mvn deploy cfg edge
         if: env.API_VERSION == 'apigeeapi'
         run:  |
@@ -146,6 +146,7 @@ jobs:
         if: env.API_VERSION == 'googleapi'
         run:  |
           sed -i "s/target_apigee_env/$APIGEE_ENV/g" ./EdgeConfig/edge.json
+          cat sa.json
           mvn install -q -Pgoogleapi -Dapigee.org=$APIGEE_ORG -Denv=$APIGEE_ENV -Dsa=sa.json -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
 
 
