@@ -135,6 +135,9 @@ jobs:
         run: | 
           echo -------
           echo $GCP_SERVICE_ACCOUNT 
+          echo $APIGEE_CREDS_USR
+          echo -------
+          echo ${{ secrets.GCP_SERVICE_ACCOUNT  }}
           echo --------
           echo $GCP_SERVICE_ACCOUNT > sa.json
           cat sa.json
