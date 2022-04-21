@@ -49,7 +49,7 @@ jobs:
         if: github.ref == 'refs/heads/prod'
         run: |
           echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-         echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
+          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
           echo "APIGEE_ENV=prod)" >> $GITHUB_ENV
   
       - name: Set Variables for branch not [Main], not [Prod]
