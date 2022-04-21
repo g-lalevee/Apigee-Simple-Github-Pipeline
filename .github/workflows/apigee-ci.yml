@@ -24,6 +24,7 @@ env:
   GIT_BRANCH: ''
   AUTHOR_EMAIL: ''
   APIGEE_ORG: ''
+  APIGEE_ENV: ''
   APIGEE_DEPLOYMENT_SUFFIX: ''
   
 jobs:
