@@ -129,13 +129,13 @@ jobs:
           restore-keys: ${{ runner.os }}-m2   
 
   # Deploy Apigeee Config (Apigee [Config] Maven plugin)
-      - name: mvn-deploy-cfg-edge
+      - name: pipi
         if: env.API_VERSION == 'apigeeapi'
         run:  |
           sed -i "s/target_apigee_env/$APIGEE_ENV/g" ./EdgeConfig/edge.json
           mvn install -Papigeeapi -Dapigee.org=$APIGEE_ORG -Denv=$APIGEE_ENV -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
 
-      - name: mvn-deploy-cfg-xhybrid
+      - name: popo
           if: env.API_VERSION == 'googleapi'
           run:  |
             sed -i "s/target_apigee_env/$APIGEE_ENV/g" ./EdgeConfig/edge.json
