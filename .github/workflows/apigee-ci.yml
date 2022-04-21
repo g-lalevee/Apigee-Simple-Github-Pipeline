@@ -131,7 +131,7 @@ jobs:
 
   # Generate SA key file from secret variable
       - name: Generate SA key file
-        if: env.API_VERSION == 'google'
+        if: env.API_VERSION == 'googleapi'
         run: echo $(GCP_SERVICE_ACCOUNT) > sa.json
  
 
