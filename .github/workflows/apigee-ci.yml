@@ -4,13 +4,28 @@ name: Apigee CI with Maven
 on: push
   
 env:
+  API_VERSION: googleapi 
+  # or 
+  #API_VERSION: apigeeapi
+
+  # Default Target Apigee Organization et environment (can be also be dynamically defined in [Set Variables *] steps)
+  DEFAULT_APIGEE_ORG: bap-emea-apigee-5
+  DEFAULT_APIGEE_ENV: default-dev
+  TEST_HOST: 34.117.38.184.nip.io
+  
+  # Retrieve Apigee UserID and password from repository settings (secrets)
+  APIGEE_CREDS_USR: ${{ secrets.APIGEE_CREDS_USR }}
+  APIGEE_CREDS_PSW: ${{ secrets.APIGEE_CREDS_PSW }}
+
+  GCP_SERVICE_ACCCOUNT: ${{ secrets.GCP_SERVICE_ACCCOUNT }}
+
   # These variables will be dynamically defined in [Set Variables *] steps
   MAVEN_PROFILE: ''
   GIT_BRANCH: ''
   AUTHOR_EMAIL: ''
   APIGEE_ORG: ''
   APIGEE_DEPLOYMENT_SUFFIX: ''
-
+  
 jobs:
   Apigee-Deploy:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
