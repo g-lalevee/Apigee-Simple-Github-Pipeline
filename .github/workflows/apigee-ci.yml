@@ -4,17 +4,29 @@ name: Apigee CI with Maven
 on: push
   
 env:
-  # Default Target Apigee Organization (can be also be dynamically defined in [Set Variables *] steps)
-  DEFAULT_APIGEE_ORG: emea-demo7
+
+  API_VERSION: "googleapi" 
+  # or 
+  #API_VERSION: "apigeeapi"
+
+  # Default Target Apigee Organization et environment (can be also be dynamically defined in [Set Variables *] steps)
+  DEFAULT_APIGEE_ORG: "bap-emea-apigee-5"
+  DEFAULT_APIGEE_ENV: "default-dev"
+  TEST_HOST: 34.117.38.184.nip.io
+  
   # Retrieve Apigee UserID and password from repository settings (secrets)
   APIGEE_CREDS_USR: ${{ secrets.APIGEE_CREDS_USR }}
   APIGEE_CREDS_PSW: ${{ secrets.APIGEE_CREDS_PSW }}
+
+  GCP_SERVICE_ACCCOUNT: ${{ secrets.GCP_SERVICE_ACCCOUNT }}
+
   # These variables will be dynamically defined in [Set Variables *] steps
   MAVEN_PROFILE: ''
   GIT_BRANCH: ''
   AUTHOR_EMAIL: ''
   APIGEE_ORG: ''
   APIGEE_DEPLOYMENT_SUFFIX: ''
+
   
 
 jobs:
@@ -30,26 +42,23 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-          echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
           echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-          echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
+          echo "APIGEE_ENV=$(echo $DEFAULT_APIGEE_ENV)" >> $GITHUB_ENV
 
       - name: Set Variables for [Prod] branch
         if: github.ref == 'refs/heads/prod'
         run: |
           echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-          echo "MAVEN_PROFILE=prod" >> $GITHUB_ENV
-          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-          echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
+         echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
+          echo "APIGEE_ENV=prod)" >> $GITHUB_ENV
   
       - name: Set Variables for branch not [Main], not [Prod]
         if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
         run: |
           echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo $GITHUB_REF | sed 's/.*\///')" >> $GITHUB_ENV
           echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-          echo "MAVEN_PROFILE=test" >> $GITHUB_ENV
           echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-          echo "TEST_HOST=$(echo $APIGEE_ORG-$MAVEN_PROFILE.apigee.net)" >> $GITHUB_ENV
+          echo "APIGEE_ENV=$(echo $DEFAULT_APIGEE_ENV)" >> $GITHUB_ENV
 
 
   # Create Dependencies (npm) Cache 
@@ -124,20 +133,34 @@ jobs:
 
   # Deploy Apigeee Config (Apigee [Config] Maven plugin)
       - name: mvn-deploy-config
+        if: API_VERSION== 'apigeeapi'
         run:  |
           sed -i "s/target_apigee_env/$MAVEN_PROFILE/g" EdgeConfig/edge.json
-          mvn install -P$MAVEN_PROFILE -Dapigee.org=$APIGEE_ORG -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
+          mvn install -Papigeeapi -Dapigee.org=$APIGEE_ORG -Denv=$APIGEE_ENV -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
+
+     - name: mvn-deploy-config
+        if: API_VERSION== 'googleapi'
+        run:  |
+          sed -i "s/target_apigee_env/$MAVEN_PROFILE/g" EdgeConfig/edge.json
+          mvn install -Pgoogleapi -Dapigee.org=$APIGEE_ORG -Denv=$APIGEE_ENV -Dsa=$GCP_SERVICE_ACCCOUNT -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
 
 
   # Package & Deploy Apigee proxy (Apigee [Deploy] Maven plugin)
       - name: mvn-package
-        run: mvn process-resources -P$MAVEN_PROFILE -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
-            
+        run: mvn process-resources -P$API_VERSION -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
+
       - name: mvn-config
-        run: mvn apigee-enterprise:configure -P$MAVEN_PROFILE -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
-  
-      - name: mvn-deploy-proxy
-        run: mvn apigee-enterprise:deploy -P$MAVEN_PROFILE -Dapigee.org=$APIGEE_ORG -Dapigee.username=$APIGEE_CREDS_USR -Dapigee.password=$APIGEE_CREDS_PSW -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
+        run: mvn apigee-enterprise:configure -P$API_VERSION -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV  -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
+
+      - name: mvn-deploy-proxy-edge
+        if: API_VERSION== 'apigeeapi'
+        run: mvn apigee-enterprise:deploy -Papigeeapi -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV -Dpassword=$APIGEE_CREDS_PSW -Dusername=$APIGEE_CREDS_USR -Ddeployment.suffix=$APIGEE_BUILD_DEPLOYMENT_SUFFIX 
+
+      - name: mvn-deploy-proxy-xhybrid
+        if: API_VERSION== 'googleapi'
+        run: mvn apigee-enterprise:deploy -Pgoogleapi -Denv=$APIGEE_ENV -Dsa=$GCP_SERVICE_ACCCOUNT -Dorg=$APIGEE_ORG -Ddeployment.suffix=$APIGEE_BUILD_DEPLOYMENT_SUFFIX 
+
+
 
 
   # Run Integration testing (Apickli) + upload artifact (cucumber_report.html)
@@ -154,3 +177,5 @@ jobs:
           name: apickli-report
           path: ./cucumber_report.html
           retention-days: 5
+
+
