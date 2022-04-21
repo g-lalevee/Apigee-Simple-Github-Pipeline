@@ -141,10 +141,3 @@ jobs:
           sed -i "s/target_apigee_env/$APIGEE_ENV/g" ./EdgeConfig/edge.json
           mvn install -Pgoogleapi -Dapigee.org=$APIGEE_ORG -Denv=$APIGEE_ENV -Dsa=$GCP_SERVICE_ACCCOUNT -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update
 
-
-  # Package & Deploy Apigee proxy (Apigee [Deploy] Maven plugin)
-      - name: mvn-package
-        run: mvn process-resources -P$API_VERSION -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
-
-      - name: mvn-config
-        run: mvn apigee-enterprise:configure -P$API_VERSION -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV  -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
