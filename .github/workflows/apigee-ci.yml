@@ -34,28 +34,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-  # Set Variables depending on branch
-      - name: Set Variables for [Main] branch
-        if: github.ref == 'refs/heads/main'
-        run: |
-          echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-          echo "APIGEE_ENV=$(echo $DEFAULT_APIGEE_ENV)" >> $GITHUB_ENV
-
-      - name: Set Variables for [Prod] branch
-        if: github.ref == 'refs/heads/prod'
-        run: |
-          echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-          echo "APIGEE_ENV=prod)" >> $GITHUB_ENV
-  
-      - name: Set Variables for branch not [Main], not [Prod]
-        if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
-        run: |
-          echo "APIGEE_DEPLOYMENT_SUFFIX=$(echo $GITHUB_REF | sed 's/.*\///')" >> $GITHUB_ENV
-          echo "AUTHOR_EMAIL=$(echo $GITHUB_ACTOR)" >> $GITHUB_ENV
-          echo "APIGEE_ORG=$(echo $DEFAULT_APIGEE_ORG)" >> $GITHUB_ENV
-          echo "APIGEE_ENV=$(echo $DEFAULT_APIGEE_ENV)" >> $GITHUB_ENV
 
 
   # Create Dependencies (npm) Cache 
