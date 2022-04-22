@@ -81,7 +81,7 @@ jobs:
 
   # Run apigeeLint test + upload artifact (apigeelint-out.html)
       - name: apigeelint
-        run: ./node_modules/apigeelint/cli.js -s ./apiproxy -f html.js -e PO013
+        run: ./node_modules/apigeelint/cli.js -s ./apiproxy -f html.js -e PO013,PO025
         # > ./apigeelint-out.html
 
       - name: Archive Apigeelint results
