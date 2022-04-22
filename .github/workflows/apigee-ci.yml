@@ -177,8 +177,11 @@ jobs:
           sed -i "s@api_basepath@$API_BASEPATH@g" ./test/integration/features/support/init.js
           sed -i "s@organization_hostname@$TEST_HOST@g" ./test/integration/features/support/init.js
 
-          node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:./report.json
-          node ./test/integration/index.js
+          # NODE_TLS_REJECT_UNAUTHORIZED required to support self signed certificate
+          export NODE_TLS_REJECT_UNAUTHORIZED=0
+
+          node ./node_modules/.bin/cucumber-js  ./test/$PROXY_NAME/integration --format json:./report.json
+          node ./test/index.js
 
       - name: Archive Apickli results
         uses: actions/upload-artifact@v2
