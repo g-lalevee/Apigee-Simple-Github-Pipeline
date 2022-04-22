@@ -171,7 +171,11 @@ jobs:
   # Run Integration testing (Apickli) + upload artifact (cucumber_report.html)
       - name: apickli
         run: |
+          # update apickli config file (init.js) with API hostname and base path
+          export API_BASEPATH="/airports-cicd/v1"
+          sed -i "s/api_basepath/$API_BASEPATH/g" ./test/integration/features/support/init.js
           sed -i "s/organization_hostname/$TEST_HOST/g" ./test/integration/features/support/init.js
+
           node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:./report.json
           node ./test/integration/index.js
 

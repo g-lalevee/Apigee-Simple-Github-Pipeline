@@ -9,9 +9,9 @@ var options = {
         launchReport: false,
         metadata: {
             "App Version":"0.3.2",
-            "Test Environment": "Gitlab",
+            "Test Environment": "Apigee",
             "Browser": "n/a",
-            "Platform": "Gitlab Runner",
+            "Platform": "SaaS Runner",
             "Parallel": "Scenarios",
             "Executed": "Remote"
         }

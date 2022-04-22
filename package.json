@@ -18,9 +18,9 @@
     },
     "dependencies": {
       "cucumber-html-reporter": "latest",
-      "apickli": "latest",
-      "apigeelint": "^0.4.8",
-      "cucumber": "^6.0.5",
+      "apickli": "^3.0.1",
+      "apigeelint": "^2.13.0",
+      "@cucumber/cucumber": "^7.3.0",
       "eslint": "^7.0.0",
       "eslint-config-google": "^0.14.0",
       "eslint-config-prettier": "^6.11.0",
