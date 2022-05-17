@@ -19,8 +19,8 @@ env:
 
   GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
+
   # These variables will be dynamically defined in [Set Variables *] steps
-  MAVEN_PROFILE: ''
   GIT_BRANCH: ''
   AUTHOR_EMAIL: ''
   APIGEE_ORG: ''
