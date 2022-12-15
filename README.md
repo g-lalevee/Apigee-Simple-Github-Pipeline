@@ -44,9 +44,8 @@ The folder [./apiproxy](./apiproxy) includes a simple API proxy bundle, a simple
 
 ## Limitations & Requirements
 
-- The authentication to the Apigee management API is done using OAuth2. If
-  you require MFA, please see the [documentation](https://github.com/apigee/apigee-deploy-maven-plugin#oauth-and-two-factor-authentication)
-  for the Maven deploy plugin for how to configure MFA.
+  - The authentication to the Apigee Edge management API is done using OAuth2. If you require MFA, please see the [documentation](https://github.com/apigee/apigee-deploy-maven-plugin#oauth-and-two-factor-authentication) for the Maven deploy plugin for how to configure MFA.
+  - The authentication to the Apigee X / Apigee hybrid management API is done using a GCP Service Account. See CI/CD Configuration [Instructions](https://gitlab.com/clalevee/apigee-simple-gitlab_ci-pipeline-v2#CI/CD-Configuration-Instructions).
 
 
 ## CI/CD Configuration Instructions
