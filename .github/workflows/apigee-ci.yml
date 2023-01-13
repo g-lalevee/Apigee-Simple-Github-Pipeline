@@ -19,8 +19,6 @@ env:
 
   GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-
-
   # These variables will be dynamically defined in [Set Variables *] steps
   GIT_BRANCH: ''
   AUTHOR_EMAIL: ''
