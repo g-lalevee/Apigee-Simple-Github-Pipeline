@@ -110,3 +110,4 @@ Use the GitHub UI to monitor your pipeline execution:
 - For example, download **apigeelint-report.zip** file and open html content with your browser. You can see the results of static code analysis for Apigee proxy with Apigeelint tool:
 
 ![GitHub CICD Pipeline apickli](./img/GitHubUI-4.png)<BR>&nbsp;<BR>
+

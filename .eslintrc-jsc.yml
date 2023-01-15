@@ -26,3 +26,4 @@ extends:
   - google
   - prettier
 rules: { no-var: 0 }
+
