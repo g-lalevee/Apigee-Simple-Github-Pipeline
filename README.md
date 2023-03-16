@@ -35,7 +35,6 @@ The folder [./apiproxy](./apiproxy) includes a simple API proxy bundle, a simple
 - [test Folder](./test) to hold the unit and integration
   tests.
 
-
 ## Target Audience
 
 - Operations
