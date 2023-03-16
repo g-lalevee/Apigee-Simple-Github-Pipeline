@@ -11,7 +11,7 @@ env:
 
   # Default Target Apigee Organization et environment (can be also be dynamically defined in [Set Variables *] steps)
   DEFAULT_APIGEE_ORG: bap-emea-apigee-5
-  DEFAULT_APIGEE_ENV: apigee-demos
+  DEFAULT_APIGEE_ENV: default-dev
   TEST_HOST: 34.117.38.184.nip.io
 
   # Retrieve Apigee UserID and password from repository settings (secrets)
