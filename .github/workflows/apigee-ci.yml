@@ -74,15 +74,12 @@ jobs:
 
 
   # Install dependencies (npm)
-  #    - name: Install Dependencies
-  #      run: npm install --silent --no-fund
+      - name: Install Dependencies
+        run: npm install #--silent --no-fund
 
   # Run Spectral
       - name: OAS-validation-spectral
-        uses: stoplightio/spectral-action@latest
-        with:
-          file_glob: 'spec/airport-1.0.0.yaml'
-          spectral_ruleset: ./test/spectral/.spectral.yaml
-
-  # spectral lint -r ./test/spectral/.spectral.yaml -f html -o spectral-report.html ./specs/airport-1.0.0.yaml  || true  # catch all errors for demo purpose 
+        run:  |
+          ls ./node_modules
+          ./node_modules/.bin/spectral lint -r ./test/spectral/.spectral.yaml -f html -o spectral-report.html ./specs/airport-1.0.0.yaml  || true  # catch all errors for demo purpose 
 
