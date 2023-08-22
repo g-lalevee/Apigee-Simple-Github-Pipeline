@@ -80,6 +80,12 @@ jobs:
   # Run Spectral
       - name: OAS-validation-spectral
         run:  |
-          ls ./node_modules
+          ls -a ./node_modules/.bin
           ./node_modules/.bin/spectral lint -r ./test/spectral/.spectral.yaml -f html -o spectral-report.html ./specs/airport-1.0.0.yaml  || true  # catch all errors for demo purpose 
 
+      - name: Archive Spectral results
+        uses: actions/upload-artifact@v3
+        with:
+          name: spectral-report
+          path:  ./spectral-report.html
+          retention-days: 5
