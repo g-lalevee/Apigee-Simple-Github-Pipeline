@@ -17,7 +17,7 @@
 const top10Airports = [
   {
     rank: 1,
-    airport: "United States Hartsfield–Jackson Atlanta International Airport",
+    airport: "United States Hartsfield–Jackson AtlantaInternational Airport",
     location: "Atlanta, Georgia",
     country: "United States",
     iata: "ATL",
