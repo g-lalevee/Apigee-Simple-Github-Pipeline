@@ -20,7 +20,6 @@ env:
   GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
   # These variables will be dynamically defined in [Set Variables *] steps
-  GIT_BRANCH: ''
   AUTHOR_EMAIL: ''
   APIGEE_ORG: ''
   APIGEE_ENV: ''
@@ -166,18 +165,18 @@ jobs:
 
   # Package & Deploy Apigee proxy (Apigee [Deploy] Maven plugin)
       - name: mvn package
-        run: mvn process-resources -P$API_VERSION -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
+        run: mvn process-resources -P$API_VERSION -Dcommit=$GIT_COMMIT -Dauthor=$AUTHOR_EMAIL -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX
 
       - name: mvn config
         run: mvn apigee-enterprise:configure -q -P$API_VERSION -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV  -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX 
 
       - name: mvn deploy proxy edge
         if: env.API_VERSION == 'apigeeapi'
-        run: mvn apigee-enterprise:deploy -q -Papigeeapi -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV -Dpassword=$APIGEE_CREDS_PSW -Dusername=$APIGEE_CREDS_USR -Ddeployment.suffix=$APIGEE_BUILD_DEPLOYMENT_SUFFIX 
+        run: mvn apigee-enterprise:deploy -q -Papigeeapi -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV -Dpassword=$APIGEE_CREDS_PSW -Dusername=$APIGEE_CREDS_USR -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX  
 
       - name: mvn deploy proxy xhybrid
         if: env.API_VERSION == 'googleapi'
-        run: mvn apigee-enterprise:deploy -q -Pgoogleapi -Denv=$APIGEE_ENV -Dsa=sa.json -Dorg=$APIGEE_ORG -Ddeployment.suffix=$APIGEE_BUILD_DEPLOYMENT_SUFFIX 
+        run: mvn apigee-enterprise:deploy -q -Pgoogleapi -Denv=$APIGEE_ENV -Dsa=sa.json -Dorg=$APIGEE_ORG -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX  
 
 
 
